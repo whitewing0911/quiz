@@ -2,636 +2,589 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>학생의 날 기념 학생인권 퀴즈</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>학생의 날 기념 학생인권 퀴즈</title>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font-family: "Noto Sans KR", "Malgun Gothic", sans-serif;
-  background: #f2f5fc;
-  color: #202b43;
-  line-height: 1.7;
-}
+    body {
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f1f5f9;
+      font-family: "Noto Sans KR", sans-serif;
+      color: #1e293b;
+    }
 
-.container {
-  width: min(700px, 92%);
-  margin: 0 auto;
-  padding: 45px 0;
-}
+    .container {
+      width: 100%;
+      max-width: 650px;
+      padding: 32px;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    }
 
-header {
-  text-align: center;
-  margin-bottom: 28px;
-}
+    h1 {
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.5;
+    }
 
-.tag {
-  display: inline-block;
-  background: #e5ecff;
-  color: #3157d5;
-  padding: 5px 14px;
-  border-radius: 30px;
-  font-size: 14px;
-  font-weight: bold;
-}
+    .subtitle {
+      margin-bottom: 28px;
+      text-align: center;
+      color: #64748b;
+      line-height: 1.7;
+    }
 
-h1 {
-  color: #172554;
-  font-size: clamp(27px, 5vw, 38px);
-  margin: 12px 0 5px;
-  line-height: 1.4;
-}
+    .screen {
+      display: none;
+    }
 
-.subtitle {
-  color: #68748b;
-  margin: 0;
-}
+    .screen.active {
+      display: block;
+    }
 
-.card {
-  background: white;
-  border: 1px solid #e1e7f0;
-  border-radius: 20px;
-  padding: clamp(22px, 5vw, 34px);
-  box-shadow: 0 8px 28px #243b6510;
-}
+    .main-button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: #2563eb;
+      color: white;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-.screen {
-  display: none;
-}
+    .main-button:hover {
+      background: #1d4ed8;
+    }
 
-.screen.active {
-  display: block;
-}
+    .progress-area {
+      margin-bottom: 24px;
+    }
 
-.start-screen {
-  text-align: center;
-  padding: 35px 15px;
-}
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 9px;
+      color: #64748b;
+      font-size: 14px;
+    }
 
-.emoji {
-  font-size: 55px;
-  margin-bottom: 10px;
-}
+    .progress-bar {
+      width: 100%;
+      height: 8px;
+      overflow: hidden;
+      border-radius: 10px;
+      background: #e2e8f0;
+    }
 
-.start-screen h2 {
-  font-size: 25px;
-  margin: 0 0 12px;
-  color: #172554;
-}
+    .progress-fill {
+      width: 0%;
+      height: 100%;
+      background: #2563eb;
+      transition: width 0.3s;
+    }
 
-.start-screen p {
-  color: #68748b;
-  margin: 0 auto 25px;
-  max-width: 420px;
-}
+    .question {
+      margin-bottom: 24px;
+      font-size: 21px;
+      font-weight: bold;
+      line-height: 1.65;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
 
-.button {
-  display: inline-block;
-  width: 100%;
-  border: none;
-  border-radius: 12px;
-  padding: 14px 20px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background .15s;
-}
+    .hint {
+      margin: -12px 0 18px;
+      color: #64748b;
+      font-size: 14px;
+    }
 
-.primary {
-  background: #3157d5;
-  color: white;
-}
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 11px;
+    }
 
-.primary:hover {
-  background: #2446b9;
-}
+    .option {
+      width: 100%;
+      padding: 14px 16px;
+      border: 2px solid #e2e8f0;
+      border-radius: 12px;
+      background: white;
+      color: #334155;
+      text-align: left;
+      font-size: 16px;
+      line-height: 1.6;
+      cursor: pointer;
+      transition: 0.2s;
+      word-break: keep-all;
+    }
 
-.secondary {
-  background: #eaf0ff;
-  color: #3157d5;
-}
+    .option:hover:not(:disabled) {
+      border-color: #93c5fd;
+      background: #eff6ff;
+    }
 
-.secondary:hover {
-  background: #dce5ff;
-}
+    .option:disabled {
+      cursor: default;
+    }
 
-.question-info {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 17px;
-}
+    .option.correct {
+      border-color: #16a34a;
+      background: #dcfce7;
+      color: #166534;
+      font-weight: bold;
+    }
 
-.question-number {
-  background: #3157d5;
-  color: white;
-  border-radius: 8px;
-  padding: 4px 10px;
-  font-size: 13px;
-  font-weight: bold;
-}
+    .option.wrong {
+      border-color: #dc2626;
+      background: #fee2e2;
+      color: #991b1b;
+      font-weight: bold;
+    }
 
-.topic {
-  font-weight: bold;
-  color: #172554;
-}
+    .feedback {
+      display: none;
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 12px;
+      line-height: 1.7;
+      white-space: pre-line;
+      word-break: keep-all;
+    }
 
-.difficulty {
-  margin-left: auto;
-  background: #f0f2f7;
-  color: #68748b;
-  padding: 3px 10px;
-  border-radius: 20px;
-  font-size: 13px;
-}
+    .feedback.show {
+      display: block;
+    }
 
-.progress-area {
-  margin-bottom: 23px;
-}
+    .feedback.correct-feedback {
+      background: #f0fdf4;
+      color: #166534;
+    }
 
-.progress-label {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  color: #68748b;
-  margin-bottom: 7px;
-}
+    .feedback.wrong-feedback {
+      background: #fef2f2;
+      color: #991b1b;
+    }
 
-.progress-bar {
-  height: 7px;
-  background: #e8edf6;
-  border-radius: 20px;
-  overflow: hidden;
-}
+    .feedback-title {
+      margin-bottom: 6px;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-.progress-fill {
-  height: 100%;
-  width: 0%;
-  background: #3157d5;
-  transition: width .25s;
-}
+    .next-button {
+      margin-top: 18px;
+    }
 
-.question-text {
-  color: #202b43;
-  font-size: clamp(18px, 4vw, 21px);
-  line-height: 1.65;
-  margin: 0 0 23px;
-}
+    .result-icon {
+      margin-bottom: 12px;
+      text-align: center;
+      font-size: 48px;
+    }
 
-.options {
-  display: grid;
-  gap: 11px;
-}
+    .result-title {
+      margin-bottom: 12px;
+      text-align: center;
+      font-size: 25px;
+      font-weight: bold;
+    }
 
-.option {
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  width: 100%;
-  padding: 13px;
-  border: 1.5px solid #e1e7f0;
-  border-radius: 12px;
-  background: white;
-  color: #202b43;
-  text-align: left;
-  font-size: 15px;
-  line-height: 1.6;
-  cursor: pointer;
-  transition: .15s;
-}
+    .score {
+      margin: 24px 0;
+      text-align: center;
+      font-size: 48px;
+      font-weight: bold;
+      color: #2563eb;
+    }
 
-.option:hover:not(:disabled) {
-  border-color: #91a8ff;
-  background: #f7f9ff;
-}
+    .result-message {
+      margin-bottom: 28px;
+      text-align: center;
+      line-height: 1.8;
+      color: #475569;
+      white-space: pre-line;
+    }
 
-.option:disabled {
-  cursor: default;
-}
+    @media (max-width: 480px) {
+      body {
+        padding: 12px;
+      }
 
-.letter {
-  flex-shrink: 0;
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 8px;
-  background: #eaf0ff;
-  color: #3157d5;
-  font-weight: bold;
-}
+      .container {
+        padding: 23px 18px;
+      }
 
-.option.correct {
-  background: #eaf8f0;
-  border-color: #269b65;
-  color: #155b40;
-}
+      h1 {
+        font-size: 23px;
+      }
 
-.option.correct .letter {
-  background: #16845b;
-  color: white;
-}
+      .question {
+        font-size: 19px;
+      }
 
-.option.wrong {
-  background: #fff0f0;
-  border-color: #d94d58;
-  color: #8c2f36;
-}
-
-.option.wrong .letter {
-  background: #c2414b;
-  color: white;
-}
-
-.feedback {
-  display: none;
-  margin-top: 18px;
-  padding: 16px;
-  border-radius: 12px;
-}
-
-.feedback.show {
-  display: block;
-}
-
-.feedback.good {
-  background: #eaf8f0;
-  color: #155b40;
-}
-
-.feedback.bad {
-  background: #fff0f0;
-  color: #8c2f36;
-}
-
-.feedback-title {
-  font-size: 17px;
-  font-weight: bold;
-  display: block;
-  margin-bottom: 5px;
-}
-
-.feedback p {
-  margin: 0;
-}
-
-.next-area {
-  margin-top: 22px;
-}
-
-.result-screen {
-  text-align: center;
-}
-
-.result-emoji {
-  font-size: 60px;
-  margin-bottom: 10px;
-}
-
-.result-screen h2 {
-  color: #172554;
-  font-size: 26px;
-  margin: 0;
-}
-
-.result-score {
-  font-size: 52px;
-  font-weight: 900;
-  color: #3157d5;
-  margin: 12px 0;
-  line-height: 1.3;
-}
-
-.result-message {
-  color: #68748b;
-  margin: 0 0 25px;
-}
-
-footer {
-  text-align: center;
-  margin-top: 22px;
-  font-size: 13px;
-  color: #8992a6;
-}
-
-@media (max-width: 480px) {
-  .container {
-    padding: 25px 0;
-  }
-
-  .difficulty {
-    margin-left: 0;
-  }
-
-  .card {
-    border-radius: 16px;
-  }
-}
-</style>
+      .option {
+        padding: 12px;
+        font-size: 15px;
+      }
+    }
+  </style>
 </head>
 
 <body>
-<main class="container">
-
-<header>
-  <span class="tag">🎓 STUDENT'S DAY</span>
-  <h1>학생인권 퀴즈</h1>
-  <p class="subtitle">학생의 날을 기념해 학생의 권리에 대해 알아봐요!</p>
-</header>
-
-<!-- 시작 화면 -->
-<section class="card screen active" id="startScreen">
-  <div class="start-screen">
-    <div class="emoji">🎓</div>
-    <h2>학생인권 퀴즈에 도전하세요!</h2>
-    <p>
-      총 5문제입니다.<br>
-      각 문제의 답을 선택하면 바로 정답을 확인할 수 있어요.<br>
-      모든 문제를 풀고 자신의 점수를 확인해 보세요.
+  <main class="container">
+    <h1>학생의 날 기념<br>학생인권 퀴즈</h1>
+    <p class="subtitle">
+      학생의 날과 학생의 권리에 대해 알아보세요!<br>
+      총 5문제로 구성되어 있습니다.
     </p>
-    <button class="button primary" id="startButton">문제 시작</button>
-  </div>
-</section>
 
-<!-- 문제 화면 -->
-<section class="card screen" id="quizScreen">
+    <!-- 시작 화면 -->
+    <section id="start-screen" class="screen active">
+      <p style="text-align:center; line-height:1.8; margin-bottom:28px;">
+        문제를 하나씩 풀고 정답을 확인해 보세요.<br>
+        마지막 문제까지 풀면 최종 점수를 확인할 수 있습니다.
+      </p>
+      <button class="main-button" onclick="startQuiz()">문제 시작</button>
+    </section>
 
-  <div class="progress-area">
-    <div class="progress-label">
-      <span id="progressText">1 / 5 문제</span>
-      <span id="progressCount">현재 점수 0점</span>
-    </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill"></div>
-    </div>
-  </div>
+    <!-- 문제 화면 -->
+    <section id="quiz-screen" class="screen">
+      <div class="progress-area">
+        <div class="progress-text">
+          <span id="question-number">1 / 5</span>
+          <span id="score-text">현재 점수: 0점</span>
+        </div>
+        <div class="progress-bar">
+          <div id="progress-fill" class="progress-fill"></div>
+        </div>
+      </div>
 
-  <div class="question-info">
-    <span class="question-number" id="questionNumber">QUESTION 01</span>
-    <span class="topic" id="topic"></span>
-    <span class="difficulty" id="difficulty"></span>
-  </div>
+      <div id="question" class="question"></div>
+      <div id="hint" class="hint"></div>
+      <div id="options" class="options"></div>
 
-  <h2 class="question-text" id="questionText"></h2>
+      <div id="feedback" class="feedback">
+        <div id="feedback-title" class="feedback-title"></div>
+        <div id="feedback-text"></div>
+      </div>
 
-  <div class="options" id="options"></div>
+      <button
+        id="next-button"
+        class="main-button next-button"
+        style="display:none;"
+        onclick="nextQuestion()"
+      >
+        다음 문제
+      </button>
+    </section>
 
-  <div class="feedback" id="feedback" aria-live="polite">
-    <strong class="feedback-title" id="feedbackTitle"></strong>
-    <p id="feedbackText"></p>
-  </div>
+    <!-- 결과 화면 -->
+    <section id="result-screen" class="screen">
+      <div class="result-icon" id="result-icon">🎉</div>
+      <div class="result-title">퀴즈 완료!</div>
+      <div id="final-score" class="score">0 / 5</div>
+      <div id="result-message" class="result-message"></div>
+      <button class="main-button" onclick="restartQuiz()">다시 풀기</button>
+    </section>
+  </main>
 
-  <div class="next-area">
-    <button class="button primary" id="nextButton" style="display:none">
-      다음 문제
-    </button>
-  </div>
-</section>
+  <script>
+    const questions = [
+      {
+        question: "Q1. 우리나라에서 학생의 날의 유래가 된 역사적 사건은 무엇일까요?",
+        options: [
+          "3.1 운동",
+          "6.10 민주항쟁",
+          "6.25 전쟁",
+          "4.19 혁명",
+          "광주학생 항일 운동"
+        ],
+        answer: [4],
+        explanation: "학생의 날은 1929년 광주학생 항일 운동에서 유래했습니다."
+      },
+      {
+        question: "Q2. 학생의 날이 오늘날 우리에게 주는 의미로 가장 적절한 것은 무엇일까요?",
+        options: [
+          "공부를 열심히 해야 한다는 의미",
+          "학생은 어른의 말을 잘 따라야 한다는 의미",
+          "학생도 사회의 구성원으로서 자신의 생각과 목소리를 낼 수 있다는 의미",
+          "선생님 말을 잘 들어야 한다는 의미",
+          "학교 규칙을 무조건 지켜야 한다는 의미"
+        ],
+        answer: [2],
+        explanation: "학생도 사회의 구성원으로서 자신의 의견을 표현하고 사회에 참여할 수 있습니다."
+      },
+      {
+        question: "Q3. 학생의 날의 다른 이름은 무엇일까요?",
+        options: [
+          "학생자주권기념일",
+          "학생애국정신기념일",
+          "청소년독립정신기념일",
+          "학생독립운동기념일",
+          "청소년민주항쟁기념일"
+        ],
+        answer: [3],
+        explanation: "학생의 날은 현재 '학생독립운동기념일'이라는 이름으로 기념합니다."
+      },
+      {
+        question: "Q4. 학생의 날은 언제 처음 생겼을까요?",
+        options: [
+          "1919년",
+          "1950년",
+          "1953년",
+          "1988년",
+          "2000년"
+        ],
+        answer: [2],
+        explanation: "1953년 학생의 날이 국가 기념일로 제정되었습니다."
+      },
+      {
+        question: "Q5. 다음 중 학생의 권리에 해당하는 것을 모두 고르시오.",
+        hint: "※ 복수 정답입니다. 해당하는 항목을 모두 선택한 뒤 제출하세요.",
+        options: [
+          "안전한 환경에서 교육받을 권리",
+          "자신의 의견을 표현할 권리",
+          "선생님의 말을 듣지 않을 권리",
+          "차별받지 않을 권리",
+          "위의 모든 것"
+        ],
+        answer: [0, 1, 3],
+        explanation: "학생에게는 안전하게 교육받을 권리, 의견을 표현할 권리, 차별받지 않을 권리가 있습니다. 다만 의견 표현의 자유도 다른 사람의 권리와 학교의 정당한 규칙을 고려해야 합니다."
+      }
+    ];
 
-<!-- 결과 화면 -->
-<section class="card screen result-screen" id="resultScreen">
-  <div class="result-emoji" id="resultEmoji">🏆</div>
-  <h2>퀴즈 완료!</h2>
-  <div class="result-score" id="finalScore">5 / 5</div>
-  <p class="result-message" id="resultMessage"></p>
-  <button class="button primary" id="retryButton">다시 풀기</button>
-</section>
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = false;
+    let selectedOptions = [];
 
-<footer>
-  서로의 권리를 존중하는 학교, 함께 만들어요.
-</footer>
+    function showScreen(screenId) {
+      document.querySelectorAll(".screen").forEach(screen => {
+        screen.classList.remove("active");
+      });
 
-</main>
-
-<script>
-const questions = [
-  {
-    topic: "학생의 기본 권리",
-    difficulty: "쉬움",
-    question: "다음 중 학생이 학교에서 보장받아야 할 기본적인 권리는 무엇일까요?",
-    options: [
-      "성적이 높은 학생만 의견을 말할 권리",
-      "모든 학생이 차별받지 않고 존중받을 권리",
-      "선생님이 허락한 학생만 인권을 보장받을 권리",
-      "학교 규칙을 잘 지킨 학생만 인권을 보장받을 권리"
-    ],
-    answer: 1,
-    explanation: "학생은 성적이나 행동에 관계없이 인간으로서 존중받아야 해요. 인권은 특정 학생에게만 주어지는 혜택이 아니에요."
-  },
-  {
-    topic: "표현의 자유",
-    difficulty: "쉬움",
-    question: "학생이 학교 규칙에 대해 불합리하다고 생각할 때 가장 바람직한 행동은 무엇일까요?",
-    options: [
-      "무조건 따르고 의견을 말하지 않는다.",
-      "규칙을 몰래 어기고 다른 학생에게도 권한다.",
-      "근거를 들어 자신의 의견을 정중하게 표현한다.",
-      "반대 의견을 가진 학생을 비난한다."
-    ],
-    answer: 2,
-    explanation: "자신의 생각을 근거와 함께 정중하게 표현하고 대화하는 것은 표현의 자유를 책임 있게 행사하는 방법이에요."
-  },
-  {
-    topic: "사생활의 자유",
-    difficulty: "보통",
-    question: "친구가 다른 학생의 동의 없이 그 학생의 휴대전화 속 사적인 사진을 단체 채팅방에 올렸습니다. 가장 적절한 설명은 무엇일까요?",
-    options: [
-      "친한 친구 사이에서는 언제나 허용된다.",
-      "장난이라면 상대방의 동의는 필요하지 않다.",
-      "사진이 재미있다면 누구나 공유할 수 있다.",
-      "사생활과 개인정보를 침해할 수 있으므로 동의 없이 공유하지 않아야 한다."
-    ],
-    answer: 3,
-    explanation: "사적인 사진을 동의 없이 공유하면 사생활과 개인정보를 침해할 수 있어요. 친한 사이거나 장난이라는 이유만으로 괜찮아지는 것은 아니에요."
-  },
-  {
-    topic: "차별받지 않을 권리",
-    difficulty: "보통",
-    question: "학교에서 학생을 대할 때 인권을 존중하는 태도로 가장 적절한 것은 무엇일까요?",
-    options: [
-      "성적이 낮은 학생에게는 의견을 낼 기회를 적게 준다.",
-      "성별이나 장애, 가정환경 등을 이유로 부당하게 차별하지 않는다.",
-      "다수의 학생이 싫어하는 학생은 활동에서 제외한다.",
-      "학생마다 인권을 보장하는 정도를 성적에 따라 다르게 한다."
-    ],
-    answer: 1,
-    explanation: "모든 학생은 성별, 장애, 가정환경 등을 이유로 부당한 차별을 받아서는 안 돼요. 각자의 차이를 존중하는 태도가 중요해요."
-  },
-  {
-    topic: "인권과 학교 규칙",
-    difficulty: "어려움",
-    question: "학교가 학생들의 안전과 학습을 위해 규칙을 만들었습니다. 이 규칙이 학생의 인권을 제한할 때, 가장 적절한 판단 기준은 무엇일까요?",
-    options: [
-      "학교가 만든 규칙이라면 어떤 내용이든 인권보다 우선한다.",
-      "학생 다수가 찬성하면 소수 학생의 권리는 제한해도 된다.",
-      "교육 목적이 있다면 제한의 정도와 방법은 따질 필요가 없다.",
-      "제한의 법적 근거와 정당한 목적이 있는지, 필요한 범위를 넘지 않는지 등을 살펴야 한다."
-    ],
-    answer: 3,
-    explanation: "학교 규칙도 무조건 우선하는 것은 아니에요. 인권 제한에 법적 근거와 정당한 목적이 있는지, 필요한 범위에서 최소한으로 제한하는지 등을 살펴야 해요."
-  }
-];
-
-const letters = ["A", "B", "C", "D"];
-let currentQuestion = 0;
-let score = 0;
-let answered = false;
-
-const $ = id => document.getElementById(id);
-
-function showScreen(screenId) {
-  document.querySelectorAll(".screen").forEach(screen => {
-    screen.classList.remove("active");
-  });
-  $(screenId).classList.add("active");
-}
-
-function startQuiz() {
-  currentQuestion = 0;
-  score = 0;
-  answered = false;
-  showScreen("quizScreen");
-  renderQuestion();
-}
-
-function renderQuestion() {
-  const q = questions[currentQuestion];
-  answered = false;
-
-  $("progressText").textContent =
-    `${currentQuestion + 1} / ${questions.length} 문제`;
-  $("progressCount").textContent = `현재 점수 ${score}점`;
-  $("progressFill").style.width =
-    `${currentQuestion / questions.length * 100}%`;
-
-  $("questionNumber").textContent =
-    `QUESTION ${String(currentQuestion + 1).padStart(2, "0")}`;
-  $("topic").textContent = q.topic;
-  $("difficulty").textContent = q.difficulty;
-  $("questionText").textContent = q.question;
-  $("options").innerHTML = "";
-
-  $("feedback").className = "feedback";
-  $("feedbackTitle").textContent = "";
-  $("feedbackText").textContent = "";
-  $("nextButton").style.display = "none";
-
-  q.options.forEach((optionText, index) => {
-    const button = document.createElement("button");
-    button.className = "option";
-    button.type = "button";
-
-    const letter = document.createElement("span");
-    letter.className = "letter";
-    letter.textContent = letters[index];
-
-    const text = document.createElement("span");
-    text.textContent = optionText;
-
-    button.append(letter, text);
-    button.addEventListener("click", () => selectAnswer(index));
-
-    $("options").appendChild(button);
-  });
-
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
-
-function selectAnswer(index) {
-  if (answered) return;
-
-  answered = true;
-  const q = questions[currentQuestion];
-  const isCorrect = index === q.answer;
-
-  if (isCorrect) score++;
-
-  [...$("options").children].forEach((button, i) => {
-    button.disabled = true;
-
-    if (i === q.answer) {
-      button.classList.add("correct");
-    } else if (i === index) {
-      button.classList.add("wrong");
+      document.getElementById(screenId).classList.add("active");
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }
-  });
 
-  $("feedback").className =
-    `feedback show ${isCorrect ? "good" : "bad"}`;
+    function startQuiz() {
+      currentQuestion = 0;
+      score = 0;
+      answered = false;
+      selectedOptions = [];
+      showScreen("quiz-screen");
+      showQuestion();
+    }
 
-  $("feedbackTitle").textContent = isCorrect
-    ? "정답입니다! 🎉"
-    : `오답입니다. 정답은 ${letters[q.answer]}입니다.`;
+    function showQuestion() {
+      answered = false;
+      selectedOptions = [];
 
-  $("feedbackText").textContent = q.explanation;
+      const q = questions[currentQuestion];
 
-  $("progressCount").textContent = `현재 점수 ${score}점`;
-  $("progressFill").style.width =
-    `${(currentQuestion + 1) / questions.length * 100}%`;
+      document.getElementById("question-number").textContent =
+        `${currentQuestion + 1} / ${questions.length}`;
 
-  const nextButton = $("nextButton");
-  nextButton.textContent =
-    currentQuestion === questions.length - 1
-      ? "결과 확인하기"
-      : "다음 문제";
-  nextButton.style.display = "block";
+      document.getElementById("score-text").textContent =
+        `현재 점수: ${score}점`;
 
-  window.setTimeout(() => {
-    nextButton.scrollIntoView({ behavior: "smooth", block: "nearest" });
-  }, 100);
-}
+      document.getElementById("progress-fill").style.width =
+        `${(currentQuestion / questions.length) * 100}%`;
 
-function nextQuestion() {
-  if (!answered) return;
+      document.getElementById("question").textContent = q.question;
+      document.getElementById("hint").textContent = q.hint || "";
 
-  if (currentQuestion < questions.length - 1) {
-    currentQuestion++;
-    renderQuestion();
-  } else {
-    showResult();
-  }
-}
+      const optionsContainer = document.getElementById("options");
+      optionsContainer.innerHTML = "";
 
-function showResult() {
-  showScreen("resultScreen");
-  $("finalScore").textContent = `${score} / ${questions.length}`;
+      q.options.forEach((option, index) => {
+        const button = document.createElement("button");
+        button.className = "option";
+        button.textContent = `${index + 1}. ${option}`;
+        button.onclick = () => selectOption(index);
+        optionsContainer.appendChild(button);
+      });
 
-  if (score === 5) {
-    $("resultEmoji").textContent = "🏆";
-    $("resultMessage").textContent =
-      "대단해요! 모든 문제를 맞혔어요. 학생인권에 대해 잘 이해하고 있네요.";
-  } else if (score >= 3) {
-    $("resultEmoji").textContent = "🎉";
-    $("resultMessage").textContent =
-      `총 5문제 중 ${score}문제를 맞혔어요! 학생인권에 대해 더 알아가는 시간이 되었길 바라요.`;
-  } else {
-    $("resultEmoji").textContent = "📚";
-    $("resultMessage").textContent =
-      `총 5문제 중 ${score}문제를 맞혔어요. 서로의 권리를 존중하는 방법을 함께 알아봐요!`;
-  }
+      const feedback = document.getElementById("feedback");
+      feedback.className = "feedback";
+      document.getElementById("feedback-title").textContent = "";
+      document.getElementById("feedback-text").textContent = "";
 
-  window.scrollTo({ top: 0, behavior: "smooth" });
-}
+      const nextButton = document.getElementById("next-button");
+      nextButton.style.display = "none";
+      nextButton.textContent =
+        currentQuestion === questions.length - 1 ? "결과 확인" : "다음 문제";
+    }
 
-$("startButton").addEventListener("click", startQuiz);
-$("nextButton").addEventListener("click", nextQuestion);
+    function selectOption(index) {
+      if (answered) return;
 
-// 다시 풀기는 새로운 참가자를 위해 점수를 초기화하고 시작 화면으로 돌아갑니다.
-$("retryButton").addEventListener("click", () => {
-  currentQuestion = 0;
-  score = 0;
-  answered = false;
-  showScreen("startScreen");
-  window.scrollTo({ top: 0, behavior: "smooth" });
-});
+      const q = questions[currentQuestion];
 
-</script>
+      // 객관식 단일 선택
+      if (currentQuestion !== 4) {
+        selectedOptions = [index];
+        checkAnswer();
+        return;
+      }
+
+      // Q5는 복수 선택
+      if (selectedOptions.includes(index)) {
+        selectedOptions = selectedOptions.filter(item => item !== index);
+      } else {
+        selectedOptions.push(index);
+      }
+
+      const buttons = document.querySelectorAll(".option");
+
+      buttons.forEach((button, i) => {
+        button.classList.toggle("correct", selectedOptions.includes(i));
+        button.textContent = `${i + 1}. ${q.options[i]}`;
+        if (selectedOptions.includes(i)) {
+          button.textContent += " ✓";
+        }
+      });
+
+      showSubmitButton();
+    }
+
+    function showSubmitButton() {
+      let submitButton = document.getElementById("submit-answer");
+
+      if (!submitButton) {
+        submitButton = document.createElement("button");
+        submitButton.id = "submit-answer";
+        submitButton.className = "main-button next-button";
+        submitButton.textContent = "정답 제출";
+        submitButton.onclick = checkAnswer;
+        document.getElementById("options").after(submitButton);
+      }
+
+      submitButton.style.display = "block";
+      submitButton.disabled = selectedOptions.length === 0;
+      submitButton.style.opacity = selectedOptions.length === 0 ? "0.5" : "1";
+    }
+
+    function checkAnswer() {
+      if (answered) return;
+      if (selectedOptions.length === 0) return;
+
+      answered = true;
+
+      const q = questions[currentQuestion];
+      const correctAnswers = [...q.answer].sort((a, b) => a - b);
+      const chosenAnswers = [...selectedOptions].sort((a, b) => a - b);
+
+      const isCorrect =
+        correctAnswers.length === chosenAnswers.length &&
+        correctAnswers.every((value, i) => value === chosenAnswers[i]);
+
+      if (isCorrect) score++;
+
+      const buttons = document.querySelectorAll(".option");
+
+      buttons.forEach((button, i) => {
+        button.disabled = true;
+
+        if (q.answer.includes(i)) {
+          button.classList.add("correct");
+        } else if (selectedOptions.includes(i)) {
+          button.classList.add("wrong");
+        }
+
+        button.textContent = `${i + 1}. ${q.options[i]}`;
+
+        if (q.answer.includes(i)) {
+          button.textContent += " ✓";
+        } else if (selectedOptions.includes(i)) {
+          button.textContent += " ✕";
+        }
+      });
+
+      const submitButton = document.getElementById("submit-answer");
+      if (submitButton) submitButton.style.display = "none";
+
+      const feedback = document.getElementById("feedback");
+      feedback.className = `feedback show ${
+        isCorrect ? "correct-feedback" : "wrong-feedback"
+      }`;
+
+      document.getElementById("feedback-title").textContent =
+        isCorrect ? "정답입니다! 🎉" : "오답입니다.";
+
+      const answerText = q.answer
+        .map(i => `${i + 1}번. ${q.options[i]}`)
+        .join("\n");
+
+      document.getElementById("feedback-text").textContent =
+        (isCorrect ? "" : `정답: ${answerText}\n\n`) + q.explanation;
+
+      document.getElementById("score-text").textContent =
+        `현재 점수: ${score}점`;
+
+      document.getElementById("progress-fill").style.width =
+        `${((currentQuestion + 1) / questions.length) * 100}%`;
+
+      document.getElementById("next-button").style.display = "block";
+      document.getElementById("next-button").scrollIntoView({
+        behavior: "smooth",
+        block: "nearest"
+      });
+    }
+
+    function nextQuestion() {
+      if (!answered) return;
+
+      currentQuestion++;
+
+      if (currentQuestion < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      showScreen("result-screen");
+
+      document.getElementById("final-score").textContent =
+        `${score} / ${questions.length}`;
+
+      let message = "";
+
+      if (score === 5) {
+        message = "완벽합니다!\n학생의 날과 학생의 권리에 대해 잘 알고 있네요.";
+        document.getElementById("result-icon").textContent = "🏆";
+      } else if (score >= 3) {
+        message = "잘했습니다!\n퀴즈를 통해 학생의 날과 학생의 권리를 알아보았어요.";
+        document.getElementById("result-icon").textContent = "🎉";
+      } else {
+        message = "수고했습니다!\n정답과 해설을 다시 읽어 보며 학생의 권리를 알아보세요.";
+        document.getElementById("result-icon").textContent = "📚";
+      }
+    }
+
+    function restartQuiz() {
+      const submitButton = document.getElementById("submit-answer");
+      if (submitButton) submitButton.remove();
+
+      startQuiz();
+    }
+  </script>
 </body>
 </html>
